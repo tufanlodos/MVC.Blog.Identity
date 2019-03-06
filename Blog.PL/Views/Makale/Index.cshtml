@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Blog.Entity.Entity.Article>
+
+@if (Model.Count() == 0)
+{
+    <div class="masonry-grid-item">
+        <p class="alert alert-info text-primary">Bu kategoride kayıtlı makale bulunmamaktadır.</p>
+    </div>
+}
+else
+{
+    foreach (var item in Model)
+    {
+        <div class="masonry-grid-item col-md-6">
+            <!-- blogpost start -->
+            <article class="clearfix blogpost">
+                <div class="overlay-container">
+                    <img src="/images/@item.Picture" alt="">
+                    <div class="overlay">
+                        <div class="overlay-links">
+                            <a href="/Makale/MakaleDetay/@item.Id"><i class="fa fa-link"></i></a>
+                            <a href="/images/@item.Picture" class="popup-img-single" title='@item.Title'><i class="fa fa-search-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="blogpost-body">
+                    <div class="post-info">
+                        <span class="day">@item.CreatedDate.Day</span>
+                        <span class="month">
+                            @item.CreatedDate.ToString("MMMM") @item.CreatedDate.Year
+                            @*@string.Format("{0:y}", item.CreatedDate)*@
+                            @*@item.CreatedDate. @item.CreatedDate.Year*@
+                        </span>
+                    </div>
+                    <div class="blogpost-content">
+                        <header>
+                            <h2 class="title"><a href="blog-post.html">@item.Title</a></h2>
+                            <div class="submitted"><i class="fa fa-user pr-5"></i> by <a href="#">@(item.User.Name + " " + item.User.Surname)</a></div>
+                        </header>
+                        @if (item.Summary.Length < 100)
+                        {
+                            <p>@Html.Raw(item.Summary)</p>
+                        }
+                        else
+                        {
+                            <p>@Html.Raw(item.Summary.Substring(0, 100))...</p>
+                        }
+                    </div>
+                </div>
+                <footer class="clearfix">
+                    <ul class="links pull-left">
+                        <li><i class="fa fa-comment-o pr-5"></i> <a href="#">@item.Comments.Count yorum</a> |</li>
+                        <li><i class="fa fa-tags pr-5"></i> <a href="#">etiket @item.Tags.Count</a></li>
+                    </ul>
+                    <a class="pull-right link" href="blog-post.html"><span>Haber detayı</span></a>
+                </footer>
+            </article>
+            <!-- blogpost end -->
+        </div>
+    }
+}

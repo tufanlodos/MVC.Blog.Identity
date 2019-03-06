@@ -1,0 +1,70 @@
+﻿@model Blog.Entity.ViewModel.MakaleAddViewModel
+
+@{
+    ViewBag.Title = "Ekle";
+}
+
+<script src="~/ckeditor/ckeditor.js"></script>
+@using (Html.BeginForm("Ekle","Makale",FormMethod.Post,new {encType="multipart/form-data" }))//gerekli ki çalışabilsin yükleme sistemi
+{
+<div class="form-horizontal">
+    <h4>Yeni Makale</h4>
+    <hr />
+    <div class="form-group">
+        @Html.Label("Kategori", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("CategoryId", new SelectList(ViewBag.Kategoriler, "Id", "Name"), new { @class = "form-control" })
+            @*kategori seçimi için kategori dropdown ı*@
+            @Html.ValidationMessageFor(model => model.Summary, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Makale Özeti", htmlAttributes: new { @class = "control-label col-md-2" })
+        @*labelfor yerine label yapıp direk string verdik*@
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Summary,5,89, new { htmlAttributes = new { @class = "form-control" } })
+            @*5 satır 89 kolon*@
+            @Html.ValidationMessageFor(model => model.Summary, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Makale İçeriği", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Content, new { htmlAttributes = new { @class = "form-control ckeditor" } })
+            @*ckeditör ü devreye aldık, yukarıda aşağıda ckeditörün js ini attık.*@
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Resim Yükle", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.PictureUpload, new { type="file", name="PictureUpload", @class = "form-control" })
+            @*fileupload ı kullanmak için, type ın file olduğunu bildirmek önemli. ve class ın en son verilmesi isteniyor.*@
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Kaydet" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<script>
+    CKEDITOR.replace("Content", { uiColor: '#fc7f7f' });
+    //ckeditör için
+</script>
+
+<div>
+    @Html.ActionLink("Geriye Dön", "Index")
+</div>

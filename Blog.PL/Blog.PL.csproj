@@ -884,6 +884,8 @@
     <Content Include="Views\Home\MakalelerByEtiket.cshtml" />
     <Content Include="Views\Home\MakalelerByKategori.cshtml" />
     <Content Include="Views\Makale\MakaleDetay.cshtml" />
+    <Content Include="Views\Makale\Index.cshtml" />
+    <Content Include="Views\Makale\Ekle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
