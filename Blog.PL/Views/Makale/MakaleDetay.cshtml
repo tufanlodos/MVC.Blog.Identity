@@ -1,4 +1,4 @@
-﻿@model Blog.Entity.Entity.Article
+﻿@model Blog.Entity.ViewModel.MakaleDetayViewModel
 @{
     ViewBag.Title = "MakaleDetay";
 }
@@ -24,58 +24,58 @@
         <div class="main col-md-8">
             <!-- page-title start -->
             <!-- ================ -->
-            <h1 class="page-title">Makale Detayları</h1>
+            <h1 class="page-title">@Model.Makale.Title</h1>
             <!-- page-title end -->
             <!-- blogpost start -->
             <article class="clearfix blogpost full">
                 <div class="blogpost-body">
                     <div class="side">
                         <div class="post-info">
-                            <span class="day">@Model.CreatedDate.Day</span>
-                            <span class="month">@Model.CreatedDate.ToString("MMMM") @Model.CreatedDate.Year</span>
+                            <span class="day">@Model.Makale.CreatedDate.Day</span>
+                            <span class="month">@Model.Makale.CreatedDate.ToString("MMMM") @Model.Makale.CreatedDate.Year</span>
                         </div>
                     </div>
                     <div class="blogpost-content">
                         <header>
-                            <div class="submitted"><i class="fa fa-user pr-5"></i> by <a href="#">@(Model.User.Name + " " + Model.User.Surname)</a></div>
+                            <div class="submitted"><i class="fa fa-user pr-5"></i> by <a href="#">@(Model.Makale.User.Name + " " + Model.Makale.User.Surname)</a></div>
                         </header>
                         <div class="owl-carousel content-slider-with-controls">
                             <div class="overlay-container">
-                                <img src="/images/@Model.Picture" alt="@Model.Title">
+                                <img src="/images/@Model.Makale.Picture" alt="@Model.Makale.Title">
                                 @*<a href="images/blog-1.jpg" class="popup-img overlay" title="image title"><i class="fa fa-search-plus"></i></a>*@
                             </div>
                             <div class="overlay-container">
-                                <img src="/images/@Model.Picture" alt="@Model.Title">
+                                <img src="/images/@Model.Makale.Picture" alt="@Model.Makale.Title">
                                 @*<a href="images/blog-2.jpg" class="popup-img overlay" title="image title"><i class="fa fa-search-plus"></i></a>*@
                             </div>
                             <div class="overlay-container">
-                                <img src="/images/@Model.Picture" alt="/images/@Model.Title">
+                                <img src="/images/@Model.Makale.Picture" alt="/images/@Model.Makale.Title">
                                 @*<a href="images/blog-3.jpg" class="popup-img overlay" title="image title"><i class="fa fa-search-plus"></i></a>*@
                             </div>
                         </div>
                         <p>
-                            @Html.Raw(Model.Content)
+                            @Html.Raw(Model.Makale.Content)
                         </p>
                     </div>
                 </div>
                 <footer class="clearfix">
                     <ul class="links pull-left">
-                        <li><i class="fa fa-comment-o pr-5"></i> <a href="#">@Model.Comments.Count yorum</a> |</li>
-                        <li><i class="fa fa-tags pr-5"></i> <a href="#">etiket @Model.Tags.Count</a></li>
+                        <li><i class="fa fa-comment-o pr-5"></i> <a href="#">@Model.Makale.Comments.Count yorum</a> |</li>
+                        <li><i class="fa fa-tags pr-5"></i> <a href="#">etiket @Model.Makale.Tags.Count</a></li>
                     </ul>
                 </footer>
             </article>
             <!-- blogpost end -->
             <!-- comments start -->
             <div class="comments">
-                @if (Model.Comments.Count == 0)
+                @if (Model.Makale.Comments.Count == 0)
                 {
                     <h2 class="title">Henüz yorum eklenmemiştir.</h2>
                 }
                 else
                 {
-                    <h2 class="title">@Model.Comments.Count yorum eklenmiştir.</h2>
-                    foreach (var yorum in Model.Comments)
+                    <h2 class="title">@Model.Makale.Comments.Count yorum eklenmiştir.</h2>
+                    foreach (var yorum in Model.Yorumlar)
                     {
                         <!-- comment start -->
                         <div class="comment clearfix">
@@ -84,9 +84,9 @@
                             </div>
                             <div class="comment-content">
                                 <h3>Yorum</h3>
-                                <div class="comment-meta">By <a href="#">@(Model.User.Name + " " + Model.User.Surname)</a> | Today, 12:31</div>
+                                <div class="comment-meta">By <a href="#">@(yorum.User.Name + " " + yorum.User.Surname)</a> | Today, 12:31</div>
                                 <div class="comment-body clearfix">
-                                    <p>@yorum.Content</p>
+                                    <p>@Html.Raw(yorum.Content)</p>
                                     <a href="blog-post.html" class="btn btn-gray more pull-right"><i class="fa fa-reply"></i> Cevapla</a>
                                 </div>
                             </div>
@@ -96,27 +96,26 @@
                 }
             </div>
             <!-- comments form start -->
+                @using (Html.BeginForm()) //postedilecekyer
+                {
             <div class="comments-form">
                 <h2 class="title">Yorum Ekle</h2>
-                <form role="form" id="comment-form">
-                    <div class="form-group has-feedback">
-                        <label for="name4">Ekleyen</label>
-                        <input type="text" class="form-control" id="name4" placeholder="" name="name4" required>
-                        <i class="fa fa-user form-control-feedback"></i>
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model=>model.Makale.Id) @*makale idsini tutturmak için*@
+                    <div class="form-group">
+                        @Html.Label("Mesaj", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(model => model.Yorum.Content, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
                     </div>
-                    <div class="form-group has-feedback">
-                        <label for="subject4">Konu</label>
-                        <input type="text" class="form-control" id="subject4" placeholder="" name="subject4" required>
-                        <i class="fa fa-pencil form-control-feedback"></i>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Kaydet" class="btn btn-default" />
+                        </div>
                     </div>
-                    <div class="form-group has-feedback">
-                        <label for="message4">Mesaj</label>
-                        <textarea class="form-control" rows="8" id="message4" placeholder="" name="message4" required></textarea>
-                        <i class="fa fa-envelope-o form-control-feedback"></i>
-                    </div>
-                    <input type="submit" value="Kaydet" class="btn btn-default">
-                </form>
+                </div>
             </div>
+                }
             <!-- comments form end -->
 
         </div>

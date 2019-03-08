@@ -15,9 +15,10 @@ namespace Blog.PL.Controllers
     public class MakaleController : BaseController
     {
         Repository<Article> repoM = new Repository<Article>(new BlogContext());
+        Repository<Comment> repoC = new Repository<Comment>(new BlogContext());
         public ActionResult Index()
         {
-            return View(repoM.GetAll());
+            return View(repoM.GetAll(null,m=>m.OrderByDescending(x=>x.CreatedDate)).Take(4)); //tarihe göre sıralamalı ilk 4
         }
         public ActionResult Ekle()
         {
@@ -53,8 +54,26 @@ namespace Blog.PL.Controllers
             return View();
         }
         public ActionResult MakaleDetay(int Id)
-        {            
-            return View(repoM.GetById(Id));
+        {
+            MakaleDetayViewModel mdvm = new MakaleDetayViewModel();
+            mdvm.Makale = repoM.GetById(Id);
+            mdvm.Yorum = new Comment();
+            mdvm.Yorumlar = mdvm.Makale.Comments.ToList();
+            return View(mdvm);
+        }
+        [HttpPost]
+        public ActionResult MakaleDetay(MakaleDetayViewModel model)
+        {
+            Comment yeniYorum = new Comment();
+            yeniYorum.ArticleId = model.Makale.Id;
+            yeniYorum.Content = model.Yorum.Content;
+            //yeniYorum.UserId = HttpContext.User.Identity.GetUserId(); //aktif kullanıcının id sini alırız cookielerden
+            yeniYorum.UserId = "55b5fccd-fbd5-4f3a-9fc0-b4b0714cc96d";
+            if (repoC.Add(yeniYorum))
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
         }
     }
 }
