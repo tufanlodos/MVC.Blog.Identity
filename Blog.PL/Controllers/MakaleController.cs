@@ -20,6 +20,7 @@ namespace Blog.PL.Controllers
         {
             return View(repoM.GetAll(null,m=>m.OrderByDescending(x=>x.CreatedDate)).Take(4)); //tarihe göre sıralamalı ilk 4
         }
+        [Authorize]
         public ActionResult Ekle()
         {
             return View();

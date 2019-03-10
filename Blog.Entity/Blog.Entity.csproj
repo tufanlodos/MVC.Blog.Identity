@@ -84,8 +84,10 @@
     <Compile Include="Identity\ApplicationRole.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MakaleAddViewModel.cs" />
     <Compile Include="ViewModel\MakaleDetayViewModel.cs" />
+    <Compile Include="ViewModel\RegisterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
